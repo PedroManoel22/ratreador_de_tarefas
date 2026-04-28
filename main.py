@@ -1,8 +1,26 @@
-from functions import user_input, cabecalho, add_task
+from functions import user_input, cabecalho
+from actions import add_task
+
+def get_clean_input(prompt: str):
+    """Captura e limpa o input, garantindo que não seja vazio."""
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        print("Entrada inválida. Por favor, digite algum conteúdo.")
+
 
 if __name__ == '__main__':
-    action = user_input(cabecalho())
+    while True:
+        action = user_input(cabecalho())
+     
+        if action == 1:
+            task_name = get_clean_input("Qual tarefa deseja adicionar? ")
+
+            add_task(task_name)
+        
+        
+        elif action is None:
+            break
     
-    if action == 1:
-        task_name = input(f"Qual tarefa deseja adicionar? ").strip()
-        add_task(task_name)
+        print(f"\n\n{type(action)}")
