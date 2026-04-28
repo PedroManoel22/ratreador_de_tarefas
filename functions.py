@@ -1,5 +1,5 @@
-from pathlib import Path
-import json
+
+from datetime import datetime
 
 def cabecalho() -> int:
     ACTIONS: dict[int, str] = {1:"Adicionar tarefa", 2:"Atualizar tarefa", 3:"Excluir tarefa", 4:"Marcar tarefa como 'em andamento",
@@ -18,39 +18,27 @@ def cabecalho() -> int:
     
     
 
-def user_input(num_of_tasks: int) -> int:
+def user_input(num_of_tasks: int) -> int | None:
     while True:
         try:
             answer = int(input("\nO que deseja? "))
 
-            if answer <=0 or answer > num_of_tasks:
+            if answer <=0 or answer > num_of_tasks and answer != 999:
                 print(f"\n\033[33mPor favor insira um número entre 1 a {num_of_tasks}\033[m")
                 continue
-            break
+             
+            elif answer == 999:
+                break
         
+            return answer
+
         except (ValueError, KeyboardInterrupt):
             print("\n\033[31mPor favor coloque um número inteiro!\033[m")
         
-    return answer
+def get_date_time():
+    now = datetime.now()
 
+    formatted_date = now.strftime("%d/%m/%Y - %H:%M:%S")
 
-def add_task(task_name: str):
-    DIR_ROOT = Path(__file__).parent
-    FILE_NAME = "data.json"
-    FILE_PATH = DIR_ROOT / FILE_NAME
-
-    if FILE_PATH.exists():
-        try:
-            with open(FILE_PATH, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                # garante que data seja uma lista para podermos usar append
-                if not isinstance(data, list):
-                    data = []
-        except (json.JSONDecodeError, ValueError):
-            # Se o arquivo estiver corrompido ou cazio, começamos do zero
-            data = []
-    else:
-        data = []
-    
- 
+    return formatted_date
     
