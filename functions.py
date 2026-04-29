@@ -1,13 +1,14 @@
 
 from datetime import datetime
+import os
 
-def cabecalho() -> int:
+def cabecalho(first_time: bool = False) -> int:
     ACTIONS: dict[int, str] = {1:"Adicionar tarefa", 2:"Atualizar tarefa", 3:"Excluir tarefa", 4:"Marcar tarefa como 'em andamento",
             5:"Marcar tarefa como 'concluída'", 6:"Listar todas as tarefas", 7:"Listar todas as terefas que foram realizadas",
             8:"Listar todas as tarefas que não foram realizadas", 9:"Listar todas as tarefas em andamento"}
 
-
-    print("\nOlá, bem vindo ao seu rastreador de tarefas!\n")
+    if first_time:
+        print("\n---- Olá, bem vindo ao seu rastreador de tarefas! ----\n")
 
     for k, v in ACTIONS.items():
         print(f"{k} -> {v}")
@@ -41,4 +42,6 @@ def get_date_time():
     formatted_date = now.strftime("%d/%m/%Y - %H:%M:%S")
 
     return formatted_date
-    
+
+def clear_terminal():
+    os.system("cls") 
