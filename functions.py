@@ -45,3 +45,4 @@ def get_date_time():
 
 def clear_terminal():
     os.system("cls") 
+    
