@@ -11,16 +11,15 @@ def get_clean_input(prompt: str):
 
 
 if __name__ == '__main__':
+    welcome = True
     while True:
-        action = user_input(cabecalho())
+        action = user_input(cabecalho(first_time=welcome))
+        welcome = False
      
         if action == 1:
             task_name = get_clean_input("Qual tarefa deseja adicionar? ")
 
             add_task(task_name)
         
-        
         elif action is None:
             break
-    
-        print(f"\n\n{type(action)}")
