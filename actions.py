@@ -55,3 +55,12 @@ def add_task(task_name: str) -> None:
 
         clear_terminal() 
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
+
+
+def update_task():...
+
+
+def delete_task():...
+
+
+def mark_in_progress():...
