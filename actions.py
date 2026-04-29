@@ -45,7 +45,7 @@ def add_task(task_name: str) -> None:
     
     if _exists:
         clear_terminal()
-        print(f"\033[31m\nA terefa {task_name} já existe!\033[m")
+        print(f"\033[31m\nA terefa {task_name} já existe!\n\033[m")
     
     else:
         data.append(new_task) # type: ignore
