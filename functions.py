@@ -44,5 +44,15 @@ def get_date_time():
     return formatted_date
 
 def clear_terminal():
-    os.system("cls") 
+    os.system("cls")
+
+
+def get_clean_input(prompt: str):
+    """Captura e limpa o input, garantindo que não seja vazio."""
+    while True:
+        value = input(prompt).strip()
+        if value:
+            return value
+        print("Entrada inválida. Por favor, digite algum conteúdo.")
+
     
