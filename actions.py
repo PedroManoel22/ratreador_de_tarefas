@@ -20,7 +20,6 @@ FILE_PATH = DIR_ROOT / FILE_NAME
 
 def add_task(task_name: str) -> None:
     
-
     data: List[Task] = []
 
     if FILE_PATH.exists():
@@ -61,7 +60,8 @@ def add_task(task_name: str) -> None:
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
 
 
-def update_task():...
+def update_task():
+    ...
 
 
 def delete_task():...
