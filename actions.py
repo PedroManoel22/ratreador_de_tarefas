@@ -12,10 +12,14 @@ class Task(TypedDict):
     updateAt: str
 
 
+# Pegando o caminho absoluto de "data.json"
+DIR_ROOT = Path(__file__).parent
+FILE_NAME = "data.json"
+FILE_PATH = DIR_ROOT / FILE_NAME
+
+
 def add_task(task_name: str) -> None:
-    DIR_ROOT = Path(__file__).parent
-    FILE_NAME = "data.json"
-    FILE_PATH = DIR_ROOT / FILE_NAME
+    
 
     data: List[Task] = []
 
