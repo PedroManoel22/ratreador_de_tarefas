@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import Any, List
 
 from types_dict import Task
 
@@ -91,3 +91,38 @@ def pegar_caminho_absoluto():
     FILE_PATH = DIR_ROOT / FILE_NAME
 
     return FILE_PATH
+
+
+def existe_a_tarefa(id: int) -> bool:
+
+    data = read_data()
+    _exists = False
+
+    for d in data:
+        if id == d["id"]:
+            _exists = True
+
+    if _exists:
+        return True
+
+    else:
+        return False
+
+
+def trata_input(id: Any = None):
+    if id:
+        try:
+            int(id)
+            return True
+
+        except ValueError:
+            print("\n\033[31mPor favor coloque um número inteiro\033[m")
+    else:
+        print("\nPor favor insira algo")
+
+
+def inserir_nos_dados(dados: list[Task] | str):
+    FILE_PATH = pegar_caminho_absoluto()
+
+    with open(FILE_PATH, "w", encoding="utf-8") as f:
+        json.dump(dados, f, indent=4, ensure_ascii=False)
