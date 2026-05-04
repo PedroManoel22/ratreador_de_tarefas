@@ -53,16 +53,19 @@ def add_task(task_name: str) -> None:
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
 
 
-def update_task(id: int):
-    _exists = existe_a_tarefa(id)  # verifica se a tarefa existe
+def update_task(id: str | int):
+    _exists = False
 
     is_number = trata_input(id)  # verifica se é um número
 
-    if _exists:
-        print(f"\nAtualizando a tarefa de id = {id}")
-        task = input("Insira a nova tarefa: ")
+    if is_number:
+        id = int(id)
+        _exists = existe_a_tarefa(id)  # verifica se a tarefa existe
 
-        if is_number:
+        if _exists:
+            print(f"\nAtualizando a tarefa de id = {id}")
+            task = input("Insira a nova tarefa: ")
+
             data = read_data()
 
             for d in data:
@@ -76,12 +79,15 @@ def update_task(id: int):
             clear_terminal()
             print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
 
-    else:
-        clear_terminal()
-        print(f"\n\033[31mA tarefa com id: {id} não existe!\033[m\n")
+        else:
+            clear_terminal()
+            print(f"\n\033[31mA tarefa com id: {id} não existe!\033[m\n")
 
 
-def delete_task(): ...
+def delete_task(id: int):
+    # _exists = existe_a_tarefa(id)
+    # is_number = trata_input(id)
+    ...
 
 
 def mark_in_progress(): ...
