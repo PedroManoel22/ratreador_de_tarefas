@@ -109,16 +109,14 @@ def existe_a_tarefa(id: int) -> bool:
         return False
 
 
-def trata_input(id: Any = None):
-    if id:
-        try:
-            int(id)
-            return True
+def trata_input(id: Any) -> bool:
+    try:
+        int(id)
+        return True
 
-        except ValueError:
-            print("\n\033[31mPor favor coloque um número inteiro\033[m")
-    else:
-        print("\nPor favor insira algo")
+    except (ValueError, KeyboardInterrupt):
+        print("\n\033[31mPor favor coloque um número inteiro\033[m\n")
+        return False
 
 
 def inserir_nos_dados(dados: list[Task] | str):
