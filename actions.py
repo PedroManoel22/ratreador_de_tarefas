@@ -1,6 +1,12 @@
-import json
-
-from functions import clear_terminal, get_date_time, pegar_caminho_absoluto, read_data
+from functions import (
+    clear_terminal,
+    existe_a_tarefa,
+    get_date_time,
+    inserir_nos_dados,
+    pegar_caminho_absoluto,
+    read_data,
+    trata_input,
+)
 from types_dict import Task
 
 
@@ -41,23 +47,38 @@ def add_task(task_name: str) -> None:
     else:
         data.append(new_task)  # type: ignore
 
-        with open(FILE_PATH, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=4, ensure_ascii=False)
+        inserir_nos_dados(data)
 
         clear_terminal()
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
 
 
 def update_task(id: int):
+    _exists = existe_a_tarefa(id)  # verifica se a tarefa existe
 
-    data = read_data()
+    is_number = trata_input(id)  # verifica se é um número
 
-    for d in data:
-        if id == d["id"]:
-            print(f"Id: {id} existe!")
+    if _exists:
+        print(f"\nAtualizando a tarefa de id = {id}")
+        task = input("Insira a nova tarefa: ")
 
-        else:
-            print(f"Id: {id} Não existe!")
+        if is_number:
+            data = read_data()
+
+            for d in data:
+                if d["id"] == id:
+                    d["description"] = task
+                    d["updateAt"] = get_date_time()
+                    break
+
+            inserir_nos_dados(data)
+
+            clear_terminal()
+            print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
+
+    else:
+        clear_terminal()
+        print(f"\n\033[31mA tarefa com id: {id} não existe!\033[m\n")
 
 
 def delete_task(): ...
@@ -79,3 +100,6 @@ def list_todo(): ...
 
 
 def list_in_progress(): ...
+
+
+# update_task(2)
