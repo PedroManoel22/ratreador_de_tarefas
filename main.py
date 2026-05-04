@@ -1,4 +1,4 @@
-from actions import add_task, update_task
+from actions import add_task, list_all, update_task
 from functions import cabecalho, get_clean_input, user_input
 
 if __name__ == "__main__":
@@ -35,9 +35,9 @@ if __name__ == "__main__":
             #     )
             #     mark_done(task_name)
 
-            # case 6:
-            #     print("\nListando todas as tarefas...\n")
-            #     list_all()
+            case 6:
+                print("\nListando todas as tarefas...\n")
+                list_all()
 
             # case 7:
             #     print("\nListando todas as terfas concluídas...")
