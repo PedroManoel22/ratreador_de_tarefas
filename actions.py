@@ -99,8 +99,6 @@ def mark_done(): ...
 def list_all():
     data = read_data()
 
-    print("\nListando todas as tarefas\n")
-
     for d in data:
         for k, v in d.items():
             print(f"{k}, {v}")
@@ -117,7 +115,3 @@ def list_todo(): ...
 
 
 def list_in_progress(): ...
-
-
-# update_task(2)
-list_all()
