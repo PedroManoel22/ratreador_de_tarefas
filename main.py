@@ -13,13 +13,14 @@ if __name__ == "__main__":
                 add_task(task_name)
 
             case 2:
-                task_id = int(
-                    get_clean_input("Insira o id da tarefa que deseja atualizar? ")
+                task_id = get_clean_input(
+                    "Insira o id da tarefa que deseja atualizar? "
                 )
+
                 update_task(task_id)
 
             # case 3:
-            #     task_name = get_clean_input("Qual tarefa deseja excluir? ")
+            #     task_name = get_clean_input("Qual o id da tarefa que deseja excluir? ")
             #     delete_task(task_name)
 
             # case 4:
