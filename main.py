@@ -1,4 +1,11 @@
-from actions import add_task, delete_task, list_all, mark_in_progress, update_task
+from actions import (
+    add_task,
+    delete_task,
+    list_all,
+    mark_done,
+    mark_in_progress,
+    update_task,
+)
 from functions import cabecalho, get_clean_input, user_input
 
 if __name__ == "__main__":
@@ -29,11 +36,11 @@ if __name__ == "__main__":
                 )
                 mark_in_progress(task_id)
 
-            # case 5:
-            #     task_name = get_clean_input(
-            #         "Qual tarefa deseja marcar como 'concluída'?"
-            #     )
-            #     mark_done(task_name)
+            case 5:
+                task_id = get_clean_input(
+                    "Qual o id da tarefa deseja marcar como 'concluída'?"
+                )
+                mark_done(task_id)
 
             case 6:
                 print("\nListando todas as tarefas...\n")
