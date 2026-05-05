@@ -84,10 +84,32 @@ def update_task(id: str | int):
             print(f"\n\033[31mA tarefa com id: {id} não existe!\033[m\n")
 
 
-def delete_task(id: int):
-    # _exists = existe_a_tarefa(id)
-    # is_number = trata_input(id)
-    ...
+def delete_task(id: str | int):
+    _exists = False
+
+    is_number = trata_input(id)
+
+    if is_number:
+        id = int(id)
+        _exists = existe_a_tarefa(id)
+
+        if _exists:
+            print(f"\nDeletando a tarefa de id = {id}")
+
+            data = read_data()
+
+            for d in data:
+                if d.get("id") == id:
+                    data.remove(d)
+                    break
+
+            inserir_nos_dados(data)
+
+            # clear_terminal()
+            print("\n\033[32mTarefa exluida com sucesso!\033[m\n")
+
+        else:
+            print("\n\033[31mA tarefa não existe!\033[m")
 
 
 def mark_in_progress(): ...
