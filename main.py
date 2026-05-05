@@ -1,4 +1,4 @@
-from actions import add_task, delete_task, list_all, update_task
+from actions import add_task, delete_task, list_all, mark_in_progress, update_task
 from functions import cabecalho, get_clean_input, user_input
 
 if __name__ == "__main__":
@@ -23,11 +23,11 @@ if __name__ == "__main__":
                 task_id = get_clean_input("Qual o id da tarefa que deseja excluir? ")
                 delete_task(task_id)
 
-            # case 4:
-            #     task_name = get_clean_input(
-            #         "Qual tarefa deseja marcar como 'em andamento'? "
-            #     )
-            #     mark_in_progress(task_name)
+            case 4:
+                task_id = get_clean_input(
+                    "Insira o id da tarefa deseja marcar como 'em andamento'? "
+                )
+                mark_in_progress(task_id)
 
             # case 5:
             #     task_name = get_clean_input(
