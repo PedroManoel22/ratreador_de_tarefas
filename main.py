@@ -1,4 +1,4 @@
-from actions import add_task, list_all, update_task
+from actions import add_task, delete_task, list_all, update_task
 from functions import cabecalho, get_clean_input, user_input
 
 if __name__ == "__main__":
@@ -19,9 +19,9 @@ if __name__ == "__main__":
 
                 update_task(task_id)
 
-            # case 3:
-            #     task_name = get_clean_input("Qual o id da tarefa que deseja excluir? ")
-            #     delete_task(task_name)
+            case 3:
+                task_id = get_clean_input("Qual o id da tarefa que deseja excluir? ")
+                delete_task(task_id)
 
             # case 4:
             #     task_name = get_clean_input(
