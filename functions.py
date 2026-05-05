@@ -106,6 +106,8 @@ def existe_a_tarefa(id: int) -> bool:
         return True
 
     else:
+        clear_terminal()
+        print(f"\n\033[31mA tarefa com id {id} não existe!\033[m")
         return False
 
 
