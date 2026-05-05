@@ -31,7 +31,7 @@ def add_task(task_name: str) -> None:
     new_task: Task = {
         "id": len(data) + 1,
         "description": task_name,
-        "status": "pendente",
+        "status": "Pendente",
         "createdAt": date_time,
         "updateAt": date_time,
     }
@@ -72,16 +72,20 @@ def update_task(id: TaskID) -> None:
 
             data = read_data()
 
-            for d in data:
-                if d.get("id") == id:
-                    d["description"] = task
-                    d["updateAt"] = get_date_time()
-                    break
+            if data:
+                for d in data:
+                    if d.get("id") == id:
+                        d["description"] = task
+                        d["updateAt"] = get_date_time()
+                        break
 
-            inserir_nos_dados(data)
+                inserir_nos_dados(data)
 
-            clear_terminal()
-            print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
+                clear_terminal()
+                print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
+
+            else:
+                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def delete_task(id: TaskID) -> None:
@@ -98,14 +102,18 @@ def delete_task(id: TaskID) -> None:
 
             data = read_data()
 
-            for d in data:
-                if d.get("id") == id:
-                    data.remove(d)
-                    break
+            if data:
+                for d in data:
+                    if d.get("id") == id:
+                        data.remove(d)
+                        break
 
-            inserir_nos_dados(data)
+                inserir_nos_dados(data)
 
-            print("\n\033[32mTarefa exluida com sucesso!\033[m\n")
+                print("\n\033[32mTarefa exluida com sucesso!\033[m\n")
+
+            else:
+                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def mark_in_progress(id: TaskID) -> None:
@@ -120,14 +128,18 @@ def mark_in_progress(id: TaskID) -> None:
         if _exists:
             data = read_data()
 
-            for d in data:
-                if d.get("id") == id:
-                    d["status"] = "em processo"
-                    break
+            if data:
+                for d in data:
+                    if d.get("id") == id:
+                        d["status"] = "em processo"
+                        break
 
-            inserir_nos_dados(data)
+                inserir_nos_dados(data)
 
-            print("\n\033[32mtarefa alterada para 'em processo'\033[m")
+                print("\n\033[32mtarefa alterada para 'em processo'\033[m")
+
+            else:
+                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def mark_done(id: TaskID) -> None:
@@ -142,34 +154,81 @@ def mark_done(id: TaskID) -> None:
         if _exists:
             data = read_data()
 
-            for d in data:
-                if d.get("id") == id:
-                    d["status"] = "Concluída"
+            if data:
+                for d in data:
+                    if d.get("id") == id:
+                        d["status"] = "Concluída"
 
-            inserir_nos_dados(data)
+                inserir_nos_dados(data)
+                clear_terminal()
+                print("\n\033[32mtarefa alterada para 'concluída'\033[m")
 
-            print("\n\033[32mtarefa alterada para 'concluída'\033[m")
+            else:
+                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def list_all() -> None:
     data = read_data()
 
-    for d in data:
-        for k, v in d.items():
-            print(f"{k}, {v}")
+    if data:
+        for d in data:
+            for k, v in d.items():
+                print(f"{k}, {v}")
 
-        print()
-        print("-" * 50)
-        print()
+            print()
+            print("-" * 50)
+            print()
 
-
-def list_done(): ...
-
-
-def list_todo(): ...
+    else:
+        print("\n\033[31mNão há nenhuma tarefa para ser listada!\n\033[m")
 
 
-def list_in_progress(): ...
+def list_done() -> None:
+    data = read_data()
+
+    if data:
+        for d in data:
+            if d.get("status") == "Concluída":
+                for k, v in d.items():
+                    print(f"{k}, {v}")
+                print()
+                print("-" * 50)
+                print()
+
+    else:
+        print("\n\033[31mNão há tarefa concluída!\n\033[m")
 
 
-mark_done(4)
+def list_todo() -> None:
+    data = read_data()
+
+    if data:
+        for d in data:
+            if d.get("status") == "Pendente":
+                for k, v in d.items():
+                    print(f"{k}, {v}")
+                print()
+                print("-" * 50)
+                print()
+
+    else:
+        print("\n\033[31mNão há nenhuma tarefa Pendente!\n\033[m")
+
+
+def list_in_progress() -> None:
+    data = read_data()
+
+    if data:
+        for d in data:
+            if d.get("status") == "em processo":
+                for k, v in d.items():
+                    print(f"{k}, {v}")
+                print()
+                print("-" * 50)
+                print()
+
+    else:
+        print("\n\033[31mNão há nenhuma tarefa Pendente!\n\033[m")
+
+
+list_in_progress()
