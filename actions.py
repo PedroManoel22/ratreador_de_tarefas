@@ -53,7 +53,7 @@ def add_task(task_name: str) -> None:
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
 
 
-def update_task(id: str | int):
+def update_task(id: str | int) -> None:
     _exists = False
 
     is_number = trata_input(id)  # verifica se é um número
@@ -69,7 +69,7 @@ def update_task(id: str | int):
             data = read_data()
 
             for d in data:
-                if d["id"] == id:
+                if d.get("id") == id:
                     d["description"] = task
                     d["updateAt"] = get_date_time()
                     break
@@ -84,7 +84,7 @@ def update_task(id: str | int):
             print(f"\n\033[31mA tarefa com id: {id} não existe!\033[m\n")
 
 
-def delete_task(id: str | int):
+def delete_task(id: str | int) -> None:
     _exists = False
 
     is_number = trata_input(id)
@@ -118,7 +118,7 @@ def mark_in_progress(): ...
 def mark_done(): ...
 
 
-def list_all():
+def list_all() -> None:
     data = read_data()
 
     for d in data:
