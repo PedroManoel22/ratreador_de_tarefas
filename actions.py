@@ -229,6 +229,3 @@ def list_in_progress() -> None:
 
     else:
         print("\n\033[31mNão há nenhuma tarefa Pendente!\n\033[m")
-
-
-list_in_progress()
