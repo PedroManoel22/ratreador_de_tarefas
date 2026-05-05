@@ -79,10 +79,6 @@ def update_task(id: str | int) -> None:
             clear_terminal()
             print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
 
-        else:
-            clear_terminal()
-            print(f"\n\033[31mA tarefa com id: {id} não existe!\033[m\n")
-
 
 def delete_task(id: str | int) -> None:
     _exists = False
@@ -105,14 +101,29 @@ def delete_task(id: str | int) -> None:
 
             inserir_nos_dados(data)
 
-            # clear_terminal()
             print("\n\033[32mTarefa exluida com sucesso!\033[m\n")
 
-        else:
-            print("\n\033[31mA tarefa não existe!\033[m")
 
+def mark_in_progress(id: str | int) -> None:
+    _exists = False
 
-def mark_in_progress(): ...
+    is_number = trata_input(id)
+
+    if is_number:
+        id = int(id)
+        _exists = existe_a_tarefa(id)
+
+        if _exists:
+            data = read_data()
+
+            for d in data:
+                if d.get("id") == id:
+                    d["status"] = "em processo"
+                    break
+
+            inserir_nos_dados(data)
+
+            print("\n\033[32mtarefa alterada para 'em processo'\033[m")
 
 
 def mark_done(): ...
