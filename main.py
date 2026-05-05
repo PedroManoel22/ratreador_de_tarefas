@@ -2,11 +2,13 @@ from actions import (
     add_task,
     delete_task,
     list_all,
+    list_done,
+    list_todo,
     mark_done,
     mark_in_progress,
     update_task,
 )
-from functions import cabecalho, get_clean_input, user_input
+from functions import cabecalho, clear_terminal, get_clean_input, user_input
 
 if __name__ == "__main__":
     welcome = True
@@ -43,16 +45,19 @@ if __name__ == "__main__":
                 mark_done(task_id)
 
             case 6:
+                clear_terminal()
                 print("\nListando todas as tarefas...\n")
                 list_all()
 
-            # case 7:
-            #     print("\nListando todas as terfas concluídas...")
-            #     list_done()
+            case 7:
+                clear_terminal()
+                print("\nListando todas as terefas concluídas...\n")
+                list_done()
 
-            # case 8:
-            #     print("\nListando todas as tarefas que não foram realizadas...\n")
-            #     list_todo()
+            case 8:
+                clear_terminal()
+                print("\nListando todas as tarefas que não foram realizadas...\n")
+                list_todo()
 
             # case 9:
             #     print("\nListando todas as tarefas que estão em andamento...\n")
