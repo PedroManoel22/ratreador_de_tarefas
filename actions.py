@@ -1,3 +1,5 @@
+from typing import TypeAlias
+
 from functions import (
     clear_terminal,
     existe_a_tarefa,
@@ -8,6 +10,8 @@ from functions import (
     trata_input,
 )
 from types_dict import Task
+
+TaskID: TypeAlias = str | int
 
 
 def add_task(task_name: str) -> None:
@@ -27,7 +31,7 @@ def add_task(task_name: str) -> None:
     new_task: Task = {
         "id": len(data) + 1,
         "description": task_name,
-        "status": "todo",
+        "status": "pendente",
         "createdAt": date_time,
         "updateAt": date_time,
     }
@@ -53,7 +57,7 @@ def add_task(task_name: str) -> None:
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
 
 
-def update_task(id: str | int) -> None:
+def update_task(id: TaskID) -> None:
     _exists = False
 
     is_number = trata_input(id)  # verifica se é um número
@@ -80,7 +84,7 @@ def update_task(id: str | int) -> None:
             print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
 
 
-def delete_task(id: str | int) -> None:
+def delete_task(id: TaskID) -> None:
     _exists = False
 
     is_number = trata_input(id)
@@ -104,7 +108,7 @@ def delete_task(id: str | int) -> None:
             print("\n\033[32mTarefa exluida com sucesso!\033[m\n")
 
 
-def mark_in_progress(id: str | int) -> None:
+def mark_in_progress(id: TaskID) -> None:
     _exists = False
 
     is_number = trata_input(id)
@@ -126,7 +130,25 @@ def mark_in_progress(id: str | int) -> None:
             print("\n\033[32mtarefa alterada para 'em processo'\033[m")
 
 
-def mark_done(): ...
+def mark_done(id: TaskID) -> None:
+    _exists = False
+
+    is_number = trata_input(id)
+
+    if is_number:
+        id = int(id)
+        _exists = existe_a_tarefa(id)
+
+        if _exists:
+            data = read_data()
+
+            for d in data:
+                if d.get("id") == id:
+                    d["status"] = "Concluída"
+
+            inserir_nos_dados(data)
+
+            print("\n\033[32mtarefa alterada para 'concluída'\033[m")
 
 
 def list_all() -> None:
@@ -148,3 +170,6 @@ def list_todo(): ...
 
 
 def list_in_progress(): ...
+
+
+mark_done(4)
