@@ -4,7 +4,7 @@ import functions
 if __name__ == "__main__":
     welcome = True
     while True:
-        action = functions.user_input(functions.cabecalho(first_time=welcome))
+        action = functions.user_input(functions.header(first_time=welcome))
         welcome = False
 
         match action:
