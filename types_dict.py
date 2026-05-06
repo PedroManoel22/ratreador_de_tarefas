@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypeAlias, TypedDict
 
 
 class Task(TypedDict):
@@ -7,3 +7,6 @@ class Task(TypedDict):
     status: str
     createdAt: str
     updateAt: str
+
+
+TaskID: TypeAlias = str | int
