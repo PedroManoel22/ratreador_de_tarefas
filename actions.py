@@ -1,32 +1,20 @@
-from typing import TypeAlias
-
-from functions import (
-    clear_terminal,
-    existe_a_tarefa,
-    get_date_time,
-    inserir_nos_dados,
-    pegar_caminho_absoluto,
-    read_data,
-    trata_input,
-)
-from types_dict import Task
-
-TaskID: TypeAlias = str | int
+import functions
+from types_dict import Task, TaskID
 
 
 def add_task(task_name: str) -> None:
 
     data: list[Task] = []
 
-    FILE_PATH = pegar_caminho_absoluto()
+    FILE_PATH = functions.pegar_caminho_absoluto()
 
     if FILE_PATH.exists():
-        data = read_data()
+        data = functions.read_data()
 
     else:
         data = []
 
-    date_time = get_date_time()
+    date_time = functions.get_date_time()
 
     new_task: Task = {
         "id": len(data) + 1,
@@ -45,130 +33,102 @@ def add_task(task_name: str) -> None:
             break
 
     if _exists:
-        clear_terminal()
+        functions.clear_terminal()
         print(f"\033[31m\nA terefa {task_name} já existe!\n\033[m")
 
     else:
         data.append(new_task)  # type: ignore
 
-        inserir_nos_dados(data)
+        functions.inserir_nos_dados(data)
 
-        clear_terminal()
+        functions.clear_terminal()
         print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
 
 
 def update_task(id: TaskID) -> None:
-    _exists = False
+    _exist = functions.check_task_exists(id)
 
-    is_number = trata_input(id)  # verifica se é um número
+    if _exist:
+        print(f"\nAtualizando a tarefa de ID = {id}")
+        task = input("Insira a nova tarefa: ")
 
-    if is_number:
-        id = int(id)
-        _exists = existe_a_tarefa(id)  # verifica se a tarefa existe
+        data = functions.read_data()
 
-        if _exists:
-            print(f"\nAtualizando a tarefa de id = {id}")
-            task = input("Insira a nova tarefa: ")
+        if data:
+            for d in data:
+                if d.get("id") == id:
+                    d["description"] = task
+                    d["updateAt"] = functions.get_date_time()
+                    break
 
-            data = read_data()
+            functions.inserir_nos_dados(data)
 
-            if data:
-                for d in data:
-                    if d.get("id") == id:
-                        d["description"] = task
-                        d["updateAt"] = get_date_time()
-                        break
+            functions.clear_terminal()
+            print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
 
-                inserir_nos_dados(data)
-
-                clear_terminal()
-                print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
-
-            else:
-                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+        else:
+            print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def delete_task(id: TaskID) -> None:
-    _exists = False
 
-    is_number = trata_input(id)
+    data = functions.read_data()
 
-    if is_number:
-        id = int(id)
-        _exists = existe_a_tarefa(id)
+    if not data:
+        print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+        return
 
-        if _exists:
-            print(f"\nDeletando a tarefa de id = {id}")
+    new_data = [d for d in data if d.get("id") != id]
 
-            data = read_data()
+    if len(new_data) != len(data):
+        functions.inserir_nos_dados(new_data)
+        print(f"\n\033[32mTarefa com ID {id} excluída com sucesso!\033[m\n")
 
-            if data:
-                for d in data:
-                    if d.get("id") == id:
-                        data.remove(d)
-                        break
-
-                inserir_nos_dados(data)
-
-                print("\n\033[32mTarefa exluida com sucesso!\033[m\n")
-
-            else:
-                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+    else:
+        print(f"\n\033[31mO ID {id} não foi encontrado na base de dados.\033[m\n")
 
 
 def mark_in_progress(id: TaskID) -> None:
-    _exists = False
+    _exist = functions.check_task_exists(id)
 
-    is_number = trata_input(id)
+    if _exist:
+        data = functions.read_data()
 
-    if is_number:
-        id = int(id)
-        _exists = existe_a_tarefa(id)
+        if data:
+            for d in data:
+                if d.get("id") == id:
+                    d["status"] = "em processo"
+                    break
 
-        if _exists:
-            data = read_data()
+            functions.inserir_nos_dados(data)
 
-            if data:
-                for d in data:
-                    if d.get("id") == id:
-                        d["status"] = "em processo"
-                        break
+            print("\n\033[32mtarefa alterada para 'em processo'\033[m")
 
-                inserir_nos_dados(data)
-
-                print("\n\033[32mtarefa alterada para 'em processo'\033[m")
-
-            else:
-                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+        else:
+            print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def mark_done(id: TaskID) -> None:
-    _exists = False
+    _exist = functions.check_task_exists(id)
 
-    is_number = trata_input(id)
+    if _exist:
+        data = functions.read_data()
 
-    if is_number:
-        id = int(id)
-        _exists = existe_a_tarefa(id)
+        if data:
+            for d in data:
+                if d.get("id") == id:
+                    d["status"] = "Concluída"
 
-        if _exists:
-            data = read_data()
+            functions.inserir_nos_dados(data)
+            functions.clear_terminal()
+            print("\n\033[32mtarefa alterada para 'concluída'\033[m")
 
-            if data:
-                for d in data:
-                    if d.get("id") == id:
-                        d["status"] = "Concluída"
-
-                inserir_nos_dados(data)
-                clear_terminal()
-                print("\n\033[32mtarefa alterada para 'concluída'\033[m")
-
-            else:
-                print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+        else:
+            print("\n\033[31mNão há nenhuma tarefa\033[m\n")
 
 
 def list_all() -> None:
-    data = read_data()
+    data = functions.read_data()
 
     if data:
         for d in data:
@@ -184,7 +144,7 @@ def list_all() -> None:
 
 
 def list_done() -> None:
-    data = read_data()
+    data = functions.read_data()
 
     if data:
         for d in data:
@@ -200,7 +160,7 @@ def list_done() -> None:
 
 
 def list_todo() -> None:
-    data = read_data()
+    data = functions.read_data()
 
     if data:
         for d in data:
@@ -216,7 +176,7 @@ def list_todo() -> None:
 
 
 def list_in_progress() -> None:
-    data = read_data()
+    data = functions.read_data()
 
     if data:
         for d in data:
