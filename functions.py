@@ -126,3 +126,18 @@ def inserir_nos_dados(dados: list[Task] | str):
 
     with open(FILE_PATH, "w", encoding="utf-8") as f:
         json.dump(dados, f, indent=4, ensure_ascii=False)
+
+
+def check_task_exists(task_id: str | int) -> bool:
+    """Valida se o id é numérico e verfica a existência da tarefa."""
+
+    is_numeric = trata_input(task_id)
+
+    if not is_numeric:
+        return False
+
+    try:
+        return existe_a_tarefa(int(task_id))
+
+    except (ValueError, TypeError):
+        return False
