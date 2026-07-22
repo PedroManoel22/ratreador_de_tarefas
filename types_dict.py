@@ -6,7 +6,7 @@ class Task(TypedDict):
     description: str
     status: str
     createdAt: str
-    updateAt: str
+    updatedAt: str
 
 
 TaskID: TypeAlias = str | int
