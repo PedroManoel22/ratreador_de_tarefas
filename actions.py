@@ -35,11 +35,11 @@ def add_task(task_name: str) -> None:
         "description": task_name,
         "status": "Pendente",
         "createdAt": date_time,
-        "updateAt": date_time,
+        "updatedAt": date_time,
     }
 
     # Verificando se a tarefa que o usuário quer inserir já existe
-    _exists = False
+    _exists = functions.check_task_exists(id=new_task["id"])
 
     for d in data:
         if task_name in d["description"]:
@@ -64,7 +64,7 @@ def update_task(id: TaskID) -> None:
 
     A função solicita uma nova descrição via input do usuário, localiza a
     tarefa pelo ID fornecido e atualiza tanto o conteúdo quanto o
-    timestamp de modificação ('updateAt').]
+    timestamp de modificação ('updatedAt').]
     Caso a tarefa não exista o usuário é informado com uma mensagem colorida
     na cor vermelha que tal tarefa não existe.
 
@@ -90,7 +90,7 @@ def update_task(id: TaskID) -> None:
             for d in data:
                 if d.get("id") == id:
                     d["description"] = task
-                    d["updateAt"] = functions.get_date_time()
+                    d["updatedAt"] = functions.get_date_time()
                     break
 
             functions.save_data(data)
@@ -154,7 +154,7 @@ def mark_in_progress(id: TaskID) -> None:
         Se o ID não for encontrado ou a base de dados estiver vazia,
         uma mensagem de erro amigável é exibida ao usuário."""
 
-    _exist = False
+    _exist = functions.check_task_exists(id)
 
     if _exist:
         data = functions.read_data()
