@@ -1,10 +1,11 @@
 import argparse
 
 import actions
+from types_dict import TaskStatus
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Configura o parser de argumentos de linha de comando."""
+    """Configura o parser de argumentos CLI."""
     parser = argparse.ArgumentParser(
         prog="task-tracker",
         description="Gerenciador de tarefas via linha de comando (CLI)",
@@ -15,7 +16,6 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # Comando: add
-
     add_parser = subparsers.add_parser("add", help="Adiciona uma nova tarefa")
     add_parser.add_argument("description", type=str, help="Descrição da tarefa")
 
@@ -24,6 +24,7 @@ def build_parser() -> argparse.ArgumentParser:
         "update", help="Atualiza a descrição de uma tarefa"
     )
     update_parser.add_argument("id", type=int, help="ID da tarefa")
+    update_parser.add_argument("description", type=str, help="Nova descrição da tarefa")
 
     # Comando: delete
     delete_parser = subparsers.add_parser("delete", help="Remove uma tarefa pelo ID")
@@ -31,23 +32,24 @@ def build_parser() -> argparse.ArgumentParser:
 
     # Comando: mark-in-progress
     mark_prog_parser = subparsers.add_parser(
-        "mark-in-progress", help="Marca tarefa como 'em andamento'"
+        "mark-in-progress", help="Marca a tarefa como 'em andamento'"
     )
     mark_prog_parser.add_argument("id", type=int, help="ID da tarefa")
 
     # Comando: mark-done
     mark_done_parser = subparsers.add_parser(
-        "mark-done", help="Marca tarefa como 'concluída'"
+        "mark-done", help="Marca a tarefa como 'concluída'"
     )
     mark_done_parser.add_argument("id", type=int, help="ID da tarefa")
 
     # Comando: list
-    list_parser = subparsers.add_parser("list", help="Lista as tarefas")
+    list_parser = subparsers.add_parser("list", help="Lista as tarefas cadastradas")
     list_parser.add_argument(
-        "--status",
+        "status",
+        nargs="?",
         choices=["all", "done", "todo", "in-progress"],
         default="all",
-        help="Filtra tarefas pelo status (padrão: all)",
+        help="Filtro opcional pelo status da tarefa (padrão: all)",
     )
 
     return parser
@@ -61,23 +63,15 @@ def main() -> None:
         case "add":
             actions.add_task(args.description)
         case "update":
-            actions.update_task(args.id)
+            actions.update_task(args.id, args.description)
         case "delete":
             actions.delete_task(args.id)
         case "mark-in-progress":
-            actions.mark_in_progress(args.id)
+            actions.update_status(args.id, TaskStatus.IN_PROGRESS)
         case "mark-done":
-            actions.mark_done(args.id)
+            actions.update_status(args.id, TaskStatus.DONE)
         case "list":
-            match args.status:
-                case "all":
-                    actions.list_all()
-                case "done":
-                    actions.list_done()
-                case "todo":
-                    actions.list_todo()
-                case "in-progress":
-                    actions.list_in_progress()
+            actions.list_tasks(args.status)
 
 
 if __name__ == "__main__":

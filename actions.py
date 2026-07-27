@@ -1,320 +1,108 @@
 import functions
-from types_dict import Task, TaskID
+from types_dict import Task, TaskStatus
 
 
-def add_task(task_name: str) -> None:
-    """Adiciona uma nova tarefa ao arquivo de persistência JSON.
-
-    Verifica a existência do arquivo de dados e carrega o estado atual.
-    Se a tarefa com o mesmo nome já existir, a operação é abortada
-    com um alerta ao usuário. Caso contrário, uma nova entrada é gerada
-    com metadados de data e ID incremental.
-
-    Args:
-        task_name (str): O nome/descrição da tarefa a ser criada.
-
-    Returns:
-        None: A função realiza operações de I/O e exibe mensagens no terminal.
-
-    Raises:
-        OSError: Pode ocorrer se houver falha na permissão de escrita do arquivo."""
-
-    data: list[Task] = []
-
-    FILE_PATH = functions.get_absolute_path()
-
-    if FILE_PATH.exists():
-        data = functions.read_data()
-    else:
-        data = []
-
-    date_time = functions.get_date_time()
-
-    new_task: Task = {
-        "id": len(data) + 1,
-        "description": task_name,
-        "status": "Pendente",
-        "createdAt": date_time,
-        "updatedAt": date_time,
-    }
-
-    # Verificando se a tarefa que o usuário quer inserir já existe
-    _exists = functions.check_task_exists(new_task["id"])
-
-    for d in data:
-        if task_name in d["description"]:
-            _exists = True
-            break
-
-    if _exists:
-        functions.clear_terminal()
-        print(f"\033[31m\nA terefa {task_name} já existe!\n\033[m")
-
-    else:
-        data.append(new_task)  # type: ignore
-
-        functions.save_data(data)
-
-        functions.clear_terminal()
-        print(f"Tarefa '{task_name}' adicionada com sucesso!\n")
-
-
-def update_task(id: TaskID) -> None:
-    """Atualiza a descrição de uma tarefa existente no banco de dados.
-
-    A função solicita uma nova descrição via input do usuário, localiza a
-    tarefa pelo ID fornecido e atualiza tanto o conteúdo quanto o
-    timestamp de modificação ('updatedAt').]
-    Caso a tarefa não exista o usuário é informado com uma mensagem colorida
-    na cor vermelha que tal tarefa não existe.
-
-    Args:
-        id (TaskID): O identificador único da tarefa a ser modificada.
-
-    Returns:
-        None: A função modifica os dados persistidos e gera saída no terminal.
-
-    Note:
-        Se o ID não for encontrado ou a base de dados estiver vazia,
-        uma mensagem de erro amigável é exibida ao usuário."""
-
-    _exist = functions.check_task_exists(id)
-
-    if _exist:
-        print(f"\nAtualizando a tarefa de ID = {id}")
-        task = input("Insira a nova tarefa: ")
-
-        data = functions.read_data()
-
-        if data:
-            for d in data:
-                if d.get("id") == id:
-                    d["description"] = task
-                    d["updatedAt"] = functions.get_date_time()
-                    break
-
-            functions.save_data(data)
-
-            functions.clear_terminal()
-            print("\n\033[32mTarefa atualizada com sucesso!\033[m\n")
-
-        else:
-            print("\n\033[31mNão há nenhuma tarefa\033[m\n")
-
-
-def delete_task(id: TaskID) -> None:
-    """Deleta uma tarefa existente no banco de dados.
-
-    A função solicita o ID da tarefa a ser excluída, localiza a
-    tarefa pelo ID fornecido, e deleta tal tarefa.
-    Caso a tarefa não exista o usuário é informado com uma mensagem colorida
-    na cor vermelha que tal tarefa não existe.
-
-    Args:
-        id (TaskID): O identificador único da tarefa a ser excluída.
-
-    Returns:
-        None: A função modifica os dados persistidos e gera saída no terminal.
-
-    Note:
-        Se o ID não for encontrado ou a base de dados estiver vazia,
-        uma mensagem de erro amigável é exibida ao usuário."""
-
-    data = functions.read_data()
-
-    if not data:
-        print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+def add_task(description: str) -> None:
+    """Adiciona uma nova tarefa à base de dados."""
+    description = description.strip()
+    if not description:
+        print("\033[31mA descrição da tarefa não pode ser vazia!\033[m")
         return
 
-    new_data = [d for d in data if d.get("id") != id]
+    data = functions.read_data()
 
-    if len(new_data) != len(data):
-        functions.save_data(new_data)
-        print(f"\n\033[32mTarefa com ID {id} excluída com sucesso!\033[m\n")
+    if any(t["description"].lower() == description.lower() for t in data):
+        print(f"\033[31mA tarefa '{description}' já existe!\033[m")
+        return
 
-    else:
-        print(f"\n\033[31mO ID {id} não foi encontrado na base de dados.\033[m\n")
+    now = functions.get_date_time()
+    new_task: Task = {
+        "id": functions.generate_next_id(data),
+        "description": description,
+        "status": TaskStatus.TODO,
+        "createdAt": now,
+        "updatedAt": now,
+    }
+
+    data.append(new_task)
+    functions.save_data(data)
+    print(
+        f"\033[32mTarefa '{description}' adicionada com sucesso! (ID: {new_task['id']})\033[m"
+    )
 
 
-def mark_in_progress(id: TaskID) -> None:
-    """Marca uma tarefa existente no banco de dados como "em andamento".
+def update_task(task_id: int, new_description: str) -> None:
+    """Atualiza a descrição de uma tarefa existente pelo seu ID."""
+    new_description = new_description.strip()
+    if not new_description:
+        print("\033[31mA nova descrição não pode ser vazia!\033[m")
+        return
 
-    A função solicita o ID da tarefa a ser marcada como "em andamento", localiza a
-    tarefa pelo ID fornecido, e atualiza o status da tarefa.
-    Caso a tarefa não exista o usuário é informado com uma mensagem colorida
-    na cor vermelha que tal tarefa não existe.
-
-    Args:
-        id (TaskID): O identificador único da tarefa a ser marcada como "em andamento".
-
-    Returns:
-        None: A função modifica os dados persistidos e gera saída no terminal.
-
-    Note:
-        Se o ID não for encontrado ou a base de dados estiver vazia,
-        uma mensagem de erro amigável é exibida ao usuário."""
-
-    _exist = functions.check_task_exists(id)
-
-    if _exist:
-        data = functions.read_data()
-
-        if data:
-            for d in data:
-                if d.get("id") == id:
-                    d["status"] = "em processo"
-                    break
-
+    data = functions.read_data()
+    for task in data:
+        if task["id"] == task_id:
+            task["description"] = new_description
+            task["updatedAt"] = functions.get_date_time()
             functions.save_data(data)
+            print(f"\033[32mTarefa ID {task_id} atualizada com sucesso!\033[m")
+            return
 
-            print("\n\033[32mtarefa alterada para 'em processo'\033[m\n")
-
-        else:
-            print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+    print(f"\033[31mTarefa com ID {task_id} não encontrada.\033[m")
 
 
-def mark_done(id: TaskID) -> None:
-    """Marca uma tarefa existente no banco de dados como "concluída".
+def delete_task(task_id: int) -> None:
+    """Remove uma tarefa da base de dados pelo seu ID."""
+    data = functions.read_data()
+    filtered_data = [t for t in data if t["id"] != task_id]
 
-    A função solicita o ID da tarefa a ser marcada como "concluída", localiza a
-    tarefa pelo ID fornecido, e atualiza o status da tarefa.
-    Caso a tarefa não exista o usuário é informado com uma mensagem colorida
-    na cor vermelha que tal tarefa não existe.
+    if len(filtered_data) == len(data):
+        print(f"\033[31mTarefa com ID {task_id} não encontrada.\033[m")
+        return
 
-    Args:
-        id (TaskID): O identificador único da tarefa a ser marcada como "concluída".
+    functions.save_data(filtered_data)
+    print(f"\033[32mTarefa com ID {task_id} excluída com sucesso!\033[m")
 
-    Returns:
-        None: A função modifica os dados persistidos e gera saída no terminal.
 
-    Note:
-        Se o ID não for encontrado ou a base de dados estiver vazia,
-        uma mensagem de erro amigável é exibida ao usuário."""
-
-    _exist = functions.check_task_exists(id)
-
-    if _exist:
-        data = functions.read_data()
-
-        if data:
-            for d in data:
-                if d.get("id") == id:
-                    d["status"] = "Concluída"
-
+def update_status(task_id: int, status: TaskStatus) -> None:
+    """Atualiza o status de uma tarefa pelo seu ID."""
+    data = functions.read_data()
+    for task in data:
+        if task["id"] == task_id:
+            task["status"] = status
+            task["updatedAt"] = functions.get_date_time()
             functions.save_data(data)
-            functions.clear_terminal()
-            print("\n\033[32mtarefa alterada para 'concluída'\033[m\n")
+            print(
+                f"\033[32mStatus da tarefa ID {task_id} alterado para '{status.value}'!\033[m"
+            )
+            return
 
-        else:
-            print("\n\033[31mNão há nenhuma tarefa\033[m\n")
+    print(f"\033[31mTarefa com ID {task_id} não encontrada.\033[m")
 
 
-def list_all() -> None:
-    """Lista todas as tarefas armazenadas de forma estruturada no console.
-
-    A função recupera a coleção de tarefas do arquivo de persistência e itera
-    sobre cada registro, exibindo pares de chave-valor. Se a base de dados
-    estiver vazia, notifica o usuário com uma mensagem de alerta.
-
-    Returns:
-        None: A saída é enviada diretamente para o stdout (terminal).
-
-    Note:
-        Utiliza sequências de escape ANSI para coloração de mensagens de erro.."""
+def list_tasks(status_filter: str | None = "all") -> None:
+    """Lista tarefas cadastradas com formatação e filtro opcional de status."""
     data = functions.read_data()
+    if not data:
+        print("\033[31mNenhuma tarefa cadastrada na base de dados.\033[m")
+        return
 
-    if data:
-        for d in data:
-            for k, v in d.items():
-                print(f"{k}, {v}")
+    if status_filter and status_filter != "all":
+        data = [t for t in data if t["status"] == status_filter]
 
-            print()
-            print("-" * 50)
-            print()
+    if not data:
+        print(
+            f"\033[33mNenhuma tarefa encontrada com o status '{status_filter}'.\033[m"
+        )
+        return
 
-    else:
-        print("\n\033[31mNão há nenhuma tarefa para ser listada!\n\033[m")
-
-
-def list_done() -> None:
-    """Lista as tarefas marcada como "concluídas" armazenadas de forma estruturada no console.
-
-    A função recupera a coleção de tarefas marcadas como "concluídas" do arquivo de persistência e itera
-    sobre cada registro, exibindo pares de chave-valor. Se a base de dados não ter
-    tarefas marcadas como "concluídas", notifica o usuário com uma mensagem de alerta.
-
-    Returns:
-        None: A saída é enviada diretamente para o stdout (terminal).
-
-    Note:
-        Utiliza sequências de escape ANSI para coloração de mensagens de erro.
-    """
-
-    data = functions.read_data()
-
-    if data:
-        for d in data:
-            if d.get("status") == "Concluída":
-                for k, v in d.items():
-                    print(f"{k}, {v}")
-                print()
-                print("-" * 50)
-                print()
-
-    else:
-        print("\n\033[31mNão há tarefa concluída!\n\033[m\n")
-
-
-def list_todo() -> None:
-    """Lista as tarefas marcada como "pendente" armazenadas de forma estruturada no console.
-
-    A função recupera a coleção de tarefas marcadas como "pendente" do arquivo de persistência e itera
-    sobre cada registro, exibindo pares de chave-valor. Se a base de dados não ter
-    tarefas marcadas como "pendente", notifica o usuário com uma mensagem de alerta.
-
-    Returns:
-        None: A saída é enviada diretamente para o stdout (terminal).
-
-    Note:
-        Utiliza sequências de escape ANSI para coloração de mensagens de erro.."""
-    data = functions.read_data()
-
-    if data:
-        for d in data:
-            if d.get("status") == "Pendente":
-                for k, v in d.items():
-                    print(f"{k}, {v}")
-                print()
-                print("-" * 50)
-                print()
-
-    else:
-        print("\n\033[31mNão há nenhuma tarefa Pendente!\n\033[m")
-
-
-def list_in_progress() -> None:
-    """Lista as tarefas marcada como "em processo" armazenadas de forma estruturada no console.
-
-    A função recupera a coleção de tarefas marcadas como "em processo" do arquivo de persistência e itera
-    sobre cada registro, exibindo pares de chave-valor. Se a base de dados não ter
-    tarefas marcadas como "em processo", notifica o usuário com uma mensagem de alerta.
-
-    Returns:
-        None: A saída é enviada diretamente para o stdout (terminal).
-
-    Note:
-        Utiliza sequências de escape ANSI para coloração de mensagens de erro..
-    """
-    data = functions.read_data()
-
-    if data:
-        for d in data:
-            if d.get("status") == "em processo":
-                for k, v in d.items():
-                    print(f"{k}, {v}")
-                print()
-                print("-" * 50)
-                print()
-
-    else:
-        print("\n\033[31mNão há nenhuma tarefa Pendente!\n\033[m")
+    print("\n" + "=" * 60)
+    for task in data:
+        status_val = (
+            task["status"].value
+            if isinstance(task["status"], TaskStatus)
+            else task["status"]
+        )
+        print(f"ID: {task['id']} | [{status_val.upper()}] - {task['description']}")
+        print(f"Criada em: {task['createdAt']} | Atualizada em: {task['updatedAt']}")
+        print("-" * 60)
+    print()
