@@ -12,5 +12,12 @@
         "status": "Concluída",
         "createdAt": "27/07/2026 - 19:21:41",
         "updatedAt": "27/07/2026 - 19:21:41"
+    },
+    {
+        "id": 3,
+        "description": "fazer arroz",
+        "status": "Pendente",
+        "createdAt": "27/07/2026 - 19:44:38",
+        "updatedAt": "27/07/2026 - 19:44:38"
     }
 ]
