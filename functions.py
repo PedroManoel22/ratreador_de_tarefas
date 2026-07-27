@@ -1,7 +1,7 @@
 import json
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -91,7 +91,7 @@ def get_date_time():
     Returns:
         str: Data e hora atuais formatadas (ex: "06/05/2026 - 17:15:30")."""
 
-    now = datetime.now()
+    now = datetime.now(timezone.utc)
 
     formatted_date = now.strftime("%d/%m/%Y - %H:%M:%S")
 
