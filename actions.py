@@ -39,7 +39,7 @@ def add_task(task_name: str) -> None:
     }
 
     # Verificando se a tarefa que o usuário quer inserir já existe
-    _exists = functions.check_task_exists(id=new_task["id"])
+    _exists = functions.check_task_exists(new_task["id"])
 
     for d in data:
         if task_name in d["description"]:
