@@ -45,11 +45,79 @@ Este projeto demonstra competências técnicas essenciais para desenvolvedores b
 
 ---
 
+A aplicação foi desenhada como uma **CLI moderna e determinística**. Isso significa que você executa o comando completo diretamente no terminal sem a necessidade de menus interativos, facilitando a automação e integração com scripts Bash.
+
+---
+
 ## 💻 Como Executar e Utilizar
 
-### 1. Clonar o Repositório
+### 0. Clonar o Repositório
 
 ```bash
-git clone [https://github.com/SeuUsuario/task-tracker-python.git](https://github.com/SeuUsuario/task-tracker-python.git)
-cd task-tracker-python
+git clone https://github.com/PedroManoel22/ratreador_de_tarefas.git
+cd ratreador_de_tarefas
+```
+
+### 🔍 1. Consultando a Ajuda (`--help`)
+
+Para visualizar todos os subcomandos e opções suportadas pela aplicação, utilize a flag de ajuda nativa:
+
+```bash
+python3 main.py --help
+```
+
+### 🔍 2. Adicionando Tarefas (`add`)
+
+Cria tarefas com IDs únicos e carimbos de data/hora (UTC).
+
+```bash
+python3 main.py add "Estudar estrutura de dados em Python"
+```
+
+### 🔍 3. Listando Tarefas (`list`)
+
+Exibe todas as tarefas cadastradas na base de dados.
+
+```bash
+python3 main.py list
+```
+
+### 🔍 3.1 Listando Tarefas por estado (`list`)
+
+Filtra tarefas por estado (`all`, `done`, `todo`, `in-progress`).
+
+```bash
+python3 main.py list --status done
+```
+
+### 🔍 4 Atualizando a descrição (`update`)
+
+Altera a descrição de uma tarefa pelo ID.
+
+```bash
+python3 main.py update 1 "Estudar estrutura de dados e algoritimos em Python"
+```
+
+### 🔍 5 Atualizando o status de uma tarefa (`mark-in-progress`)
+
+Altera o status da tarefa para `em andamento`.
+
+```bash
+python3 main.py mark-in-progress 1
+```
+
+### 🔍 6 Atualizando o status de uma tarefa (`mark-done`)
+
+Altera o status da tarefa para `concluída`.
+
+```bash
+python3 main.py mark-done 1
+```
+
+### 🔍 7 Removendo uma Tarefa (`delete`)
+
+Remove permanentemente uma tarefa do arquivo JSON.
+
+```bash
+python3 main.py delete 2
 ```
