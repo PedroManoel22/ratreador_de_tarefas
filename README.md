@@ -1,38 +1,55 @@
 # Task Tracker CLI 🚀
 
-Uma aplicação robusta de linha de comando para gerenciamento de tarefas, desenvolvida em Python. Este projeto segue os requisitos do desafio [Task Tracker](https://roadmap.sh/projects/task-tracker) do Roadmap.sh, focando em persistência de dados, organização modular e boas práticas de desenvolvimento backend.
+Uma aplicação de linha de comando robusta, leve e profissional para gerenciamento de tarefas, desenvolvida em Python. Este projeto segue as especificações do desafio [Task Tracker](https://roadmap.sh/projects/task-tracker) do Roadmap.sh, focando em persistência de dados, arquitetura modular, interfaces CLI modernas e boas práticas de desenvolvimento backend.
+
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Code Style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+---
 
 ## 📌 Sobre o Projeto
 
-O **Task Tracker** permite que o usuário gerencie sua lista de afazeres diretamente pelo terminal. Os dados são persistidos em um arquivo JSON, garantindo que as informações não sejam perdidas ao fechar a aplicação.
+O **Task Tracker CLI** permite que o usuário gerencie sua lista de afazeres de forma rápida e automatizável diretamente pelo terminal, utilizando subcomandos e flags. Os dados são persistidos localmente em um arquivo `JSON`, garantindo a integridade e manutenção das informações entre as execuções.
 
-Este projeto demonstra competências em:
-* Manipulação de sistemas de arquivos (I/O) com JSON.
-* Lógica de programação avançada e filtragem de dados.
-* Interface de usuário em terminal (CLI) com suporte a cores ANSI.
+Este projeto demonstra competências técnicas essenciais para desenvolvedores backend:
+
+- **Interface CLI Profissional:** Construção de parser de argumentos e subcomandos com a biblioteca padrão (`argparse`).
+- **Manipulação I/O com JSON:** Leitura, escrita e validação de dados estruturados em arquivo local.
+- **Tipagem Estática e Design Pattern:** Organização de tipos estruturados com `TypedDict`, Type Hints explícitos e separação de camadas (_Separation of Concerns_).
+- **Boas Práticas de Código:** Garantia de compatibilidade com PEP 8, padronização via linter **Ruff** e tratamento de fusos horários UTC (`timezone-aware`).
+
+---
 
 ## 🛠️ Tecnologias e Conceitos Aplicados
 
-* **Python 3.10+**: Uso de recursos modernos como `match/case` para controle de fluxo.
-* **Type Hinting**: Código documentado com tipos para facilitar a manutenção e prevenir erros.
-* **Persistência em JSON**: Armazenamento estruturado de dados.
-* **Modularização**: Divisão clara de responsabilidades entre funções de sistema (`functions.py`) e lógica de negócio (`actions.py`).
-* **PEP 8**: Código escrito seguindo os padrões oficiais de estilo da comunidade Python.
+- **Python 3.10+**: Controle de fluxo moderno usando `match/case` para roteamento de subcomandos.
+- **Standard Library Apenas**: Nenhuma biblioteca externa (`pip install`) é necessária para executar o projeto (`argparse`, `json`, `datetime`, `pathlib`).
+- **Type Hinting & Static Typing**: Tipagem rigorosa nos parâmetros e retornos das funções.
+- **Modularização**: Divisão estratégica das responsabilidades entre a CLI (`main.py`), regras de negócio (`actions.py`), funções de suporte (`functions.py`) e tipagens (`types_dict.py`).
+
+---
 
 ## 🚀 Funcionalidades
 
-| Recurso | Descrição |
-| :--- | :--- |
-| **Adicionar** | Cria tarefas com IDs auto-incrementais únicos. |
-| **Listagem Geral** | Visualização de todas as tarefas cadastradas na base de dados. |
-| **Listagem Filtrada** | Filtros específicos para visualizar tarefas por status: *não realizada*, *em andamento* ou *concluída*. |
-| **Gestão de Status** | Alteração rápida do estado das tarefas para 'em andamento' ou 'concluída'. |
-| **Atualização** | Alteração dinâmica da descrição de tarefas existentes. |
-| **Exclusão** | Remoção segura de itens da base de dados. |
-| **Feedback Visual** | Interface colorida (Cores ANSI) para indicar sucessos e erros no terminal. |
+| Recurso                 | Comando CLI              | Descrição                                                             |
+| :---------------------- | :----------------------- | :-------------------------------------------------------------------- |
+| **Adicionar**           | `add`                    | Cria tarefas com IDs únicos e carimbos de data/hora (UTC).            |
+| **Listar Tudo**         | `list`                   | Exibe todas as tarefas cadastradas na base de dados.                  |
+| **Listar Filtrado**     | `list --status <STATUS>` | Filtra tarefas por estado (`all`, `done`, `todo`, `in-progress`).     |
+| **Atualizar Descrição** | `update`                 | Altera a descrição de uma tarefa pelo ID.                             |
+| **Marcar Em Andamento** | `mark-in-progress`       | Altera o status da tarefa para `em andamento`.                        |
+| **Marcar Concluída**    | `mark-done`              | Altera o status da tarefa para `concluída`.                           |
+| **Excluir**             | `delete`                 | Remove permanentemente uma tarefa do arquivo JSON.                    |
+| **Feedback Visual**     | -                        | Mensagens formatadas e coloridas (ANSI) indicando sucessos ou falhas. |
 
-## 💻 Como Executar
+---
 
-1. Clone o repositório:
-   ```bash
-   git clone [https://github.com/SeuUsuario/task-tracker-python.git](https://github.com/SeuUsuario/task-tracker-python.git)
+## 💻 Como Executar e Utilizar
+
+### 1. Clonar o Repositório
+
+```bash
+git clone [https://github.com/SeuUsuario/task-tracker-python.git](https://github.com/SeuUsuario/task-tracker-python.git)
+cd task-tracker-python
+```
