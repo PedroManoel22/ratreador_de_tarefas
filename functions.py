@@ -1,6 +1,6 @@
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 from types_dict import Task
@@ -15,7 +15,7 @@ def get_absolute_path() -> Path:
 
 def get_date_time() -> str:
     """Retorna o timestamp atual formatado em padrão ISO/legível."""
-    return datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def read_data() -> list[Task]:
