@@ -1,8 +1,9 @@
 import json
 import os
+import subprocess
 from datetime import datetime
 from pathlib import Path
-from typing import Any, List
+from typing import Any
 
 from types_dict import Task
 
@@ -110,7 +111,9 @@ def clear_terminal():
     Note:
         Atualmente implementada especificamente para ambientes Windows ('cls').
     """
-    os.system("cls")
+    """Limpa o console do sistema operacional."""
+    command = "cls" if os.name == "nt" else "clear"
+    subprocess.run(command, shell=True, check=False)
 
 
 def get_clean_input(prompt: str):
@@ -121,7 +124,7 @@ def get_clean_input(prompt: str):
             return value
 
 
-def read_data() -> List[Task]:
+def read_data() -> list[Task]:
     """Lê e decodifica o arquivo JSON de tarefas.
 
     Tenta abrir o arquivo de persistência utilizando codificação UTF-8.
